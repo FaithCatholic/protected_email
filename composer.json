@@ -1,0 +1,14 @@
+{
+  "name": "faithcatholic/protected_email",
+  "type": "drupal-module",
+  "description": "Field formatter that requires users to fill a recaptcha form to view an email address.",
+  "keywords": ["Drupal"],
+  "license": "GPL-2.0+",
+  "homepage": "https://www.drupal.org/project/protected_email",
+  "minimum-stability": "dev",
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/protected_email",
+    "source": "http://cgit.drupalcode.org/protected_email"
+  },
+  "require": { }
+}

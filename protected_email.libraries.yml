@@ -1,0 +1,9 @@
+protected_email:
+  css:
+    theme:
+      css/protected_email.css: {}
+  js:
+    js/protected_email.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once

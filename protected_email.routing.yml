@@ -1,0 +1,8 @@
+
+protected_email.protected_email_reveal_view:
+  path: '/protected-email'
+  defaults:
+    _controller: '\Drupal\protected_email\Controller\ProtectedEmailReveal::view'
+    _title: 'Protected Email'
+  requirements:
+    _permission: 'access content'

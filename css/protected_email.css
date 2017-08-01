@@ -1,0 +1,102 @@
+.protected-email-captcha-form.hide,
+.protected-email-captcha-label.hide,
+.protected-email-captcha-cancel.hide {
+  display: none !important;
+}
+
+.protected-email-captcha-form {
+  clear: both;
+  display: inline;
+  margin: 0.65em 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.protected-email-captcha-label,
+.protected-email-captcha-cancel,
+.protected-email-captcha-label:hover,
+.protected-email-captcha-cancel:hover {
+  border-bottom: 1px dotted;
+  color: #0071b3;
+  cursor: pointer;
+}
+
+.protected-email-captcha-cancel {
+  display: block;
+  float: left;
+  font-size: 0.5em;
+  letter-spacing: 0.5px;
+  line-height: 1;
+  margin-left: 1em;
+  margin-top: 1.65em;
+  text-transform: uppercase;
+}
+
+.protected-email-captcha-form .form-item {
+  margin: 0;
+}
+
+.protected-email-captcha-form .form-text {
+  background: #f3f3f3;
+  border-right: none;
+  font-size: inherit;
+  margin-bottom: 0;
+  margin-top: 0;
+  padding: 8px;
+}
+
+.protected-email-captcha-form .form-text.error {
+  padding: 7px;
+}
+
+.protected-email-captcha-form .description {
+  display: none;
+}
+
+.protected-email-captcha-form .captcha > * {
+  display: block;
+  float: left;
+}
+
+.protected-email-captcha-form .captcha > img {
+  border: 1px solid #ccc;
+  border-right: none;
+  max-height: 25px;
+  padding: 4px 8px;
+  width: auto;
+}
+
+.protected-email-captcha-form .captcha > img.error {
+  border-color: red;
+  border-width: 2px;
+  padding: 3px;
+}
+
+.protected-email-captcha-form .form-submit {
+  border-color: #ccc;
+  border-radius: 0;
+  display: block;
+  float: left;
+  font-size: 1.25em;
+  font-weight: bold;
+  height: 35px;
+  margin: 0;
+  padding: 0 0.6em;
+}
+
+/*.protected-email-captcha-form .button,
+.protected-email-captcha-form .button:hover,
+.protected-email-captcha-form .button:active,
+.protected-email-captcha-form .button:focus {
+  background: none;
+  border-left: none;
+  border-radius: 0;
+  border-right: none;
+  border-top: none;
+  color: #0071b3;
+  font-family: inherit;
+  font-weight: bold;
+  margin: 10px 5px 0 3px;
+  padding: 0;
+  text-transform: uppercase;
+}*/

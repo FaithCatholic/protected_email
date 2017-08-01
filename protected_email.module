@@ -1,0 +1,122 @@
+<?php
+
+use Drupal\Component\Utility\XSS;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\protected_email\Form\ProtectedEmailCaptcha;
+
+/**
+ * Implements hook_theme().
+ */
+function protected_email_theme() {
+  return [
+    'protected_email' => [
+      'variables' => ['data' => []],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_preprocess_page()
+ */
+function protected_email_preprocess_page(&$vars) {
+  $vars['get']['protected_email_id'] = @XSS::filter($_GET['protected_email_id']);
+  $vars['get']['protected_email_type'] = @XSS::filter($_GET['protected_email_type']);
+  $vars['get']['protected_email_value'] = @XSS::filter($_GET['protected_email_value']);
+}
+
+/**
+ * Preprocess protected email field output.
+ */
+function template_preprocess_protected_email(&$variables) {
+  $id = $variables['data']['id'];
+  $type = $variables['data']['type'];
+  $field = $variables['data']['field'];
+
+  // We need to generate unique form ids so that submit buttons
+  // submit the right form, not only the FIRST form!
+  static $form_count = 0;
+  $form_count++;
+
+  $form = new ProtectedEmailCaptcha($form_count);
+  $form = \Drupal::formBuilder()->getForm($form, $id, $type, $field);
+
+  $output  = '';
+  $output .= '<span data-entity-id="' . $id . '" data-entity-type="' . $type . '" data-entity-field="' . $field . '" class="protected-email-captcha-value"></span>';
+  $output .= '<span class="protected-email-captcha-label">' . t('View email address') . ' »</span>';
+  $output .= \Drupal::service('renderer')->render($form);
+  $output .= '<span class="protected-email-captcha-cancel hide">' . t('Cancel') . '</span>';
+
+  $variables['captcha'] = $output;
+}
+
+/**
+ * Implements hook_preprocess_captcha()
+ */
+function protected_email_preprocess_captcha(&$variables) {
+  $variables['element']['captcha_widgets']['captcha_response']['#size'] = 16;
+  $variables['element']['captcha_widgets']['captcha_response']['#placeholder'] = t('Type code to view...');
+  unset($variables['element']['captcha_widgets']['captcha_response']['#title']);
+}
+
+/**
+ * Implements hook_theme_registry_alter().
+ */
+function protected_email_theme_registry_alter(&$theme_registry) {
+  $theme_registry['html__protected_email'] = array(
+    'template' => 'html--protected-email',
+    'path' => drupal_get_path('module', 'protected_email') . '/templates',
+    'render element' => 'html',
+    'base hook' => 'html',
+    'type' => 'theme_engine',
+    'theme path' => drupal_get_path('module', 'protected_email'),
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_html',
+      'contextual_preprocess',
+      'node_preprocess_html',
+    ),
+  );
+
+  $theme_registry['page__protected_email'] = array(
+    'template' => 'page--protected-email',
+    'path' => drupal_get_path('module', 'protected_email') . '/templates',
+    'render element' => 'html',
+    'base hook' => 'html',
+    'type' => 'theme_engine',
+    'theme path' => drupal_get_path('module', 'protected_email'),
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_page',
+      'contextual_preprocess',
+      'protected_email_preprocess_page',
+    ),
+  );
+}
+
+/**
+ * Implements hook_form_alter();
+ */
+function protected_email_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
+  // Enable on all protected_email_captcha_ID forms.
+  if (substr($form_id, 0, 23) === 'protected_email_captcha') {
+    $account = \Drupal::currentUser();
+    $config = \Drupal::config('captcha.settings');
+
+    // Visitor must complete captcha.
+    if (!$account->hasPermission('skip CAPTCHA')) {
+      // Enable image captcha on form.
+      $captcha_element = [
+        '#type' => 'captcha',
+        '#captcha_type' => 'image_captcha/Image',
+      ];
+      // Get placement and insert.
+      \Drupal::moduleHandler()->loadInclude('captcha', 'inc');
+      $captcha_placement = _captcha_get_captcha_placement($form_id, $form);
+      _captcha_insert_captcha_element($form, $captcha_placement, $captcha_element);
+    }
+
+    // Add honeypot protection.
+    \Drupal::moduleHandler()->loadInclude('honeypot', 'module');
+    honeypot_add_form_protection($form, $form_state, ['honeypot']);
+  }
+}

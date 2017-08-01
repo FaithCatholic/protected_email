@@ -1,0 +1,8 @@
+name: Protected email
+type: module
+description: Field formatter that requires users to fill a recaptcha form to view an email address.
+core: 8.x
+package: Custom
+dependencies:
+  - image_captcha
+  - honeypot
