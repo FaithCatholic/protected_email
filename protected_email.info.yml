@@ -6,3 +6,4 @@ package: Custom
 dependencies:
   - image_captcha
   - honeypot
+  - rest

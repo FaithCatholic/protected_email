@@ -64,7 +64,7 @@ class ProtectedEmailCaptcha extends FormBase {
       'protected_email_value' => \Drupal::entityTypeManager()->getStorage($values['entity_type'])->load($values['entity_id'])->get($values['entity_field'])->value,
     ];
 
-    $url = Url::fromUri('internal:/protected-email', $params);
+    $url = Url::fromUri('internal:/protected-email-value?_format=json', $params);
     $form_state->setRedirectUrl($url);
   }
 

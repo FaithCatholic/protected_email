@@ -59,41 +59,6 @@ function protected_email_preprocess_captcha(&$variables) {
 }
 
 /**
- * Implements hook_theme_registry_alter().
- */
-function protected_email_theme_registry_alter(&$theme_registry) {
-  $theme_registry['html__protected_email'] = array(
-    'template' => 'html--protected-email',
-    'path' => drupal_get_path('module', 'protected_email') . '/templates',
-    'render element' => 'html',
-    'base hook' => 'html',
-    'type' => 'theme_engine',
-    'theme path' => drupal_get_path('module', 'protected_email'),
-    'preprocess functions' => array(
-      'template_preprocess',
-      'template_preprocess_html',
-      'contextual_preprocess',
-      'node_preprocess_html',
-    ),
-  );
-
-  $theme_registry['page__protected_email'] = array(
-    'template' => 'page--protected-email',
-    'path' => drupal_get_path('module', 'protected_email') . '/templates',
-    'render element' => 'html',
-    'base hook' => 'html',
-    'type' => 'theme_engine',
-    'theme path' => drupal_get_path('module', 'protected_email'),
-    'preprocess functions' => array(
-      'template_preprocess',
-      'template_preprocess_page',
-      'contextual_preprocess',
-      'protected_email_preprocess_page',
-    ),
-  );
-}
-
-/**
  * Implements hook_form_alter();
  */
 function protected_email_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
