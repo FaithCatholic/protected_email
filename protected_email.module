@@ -54,7 +54,7 @@ function template_preprocess_protected_email(&$variables) {
  */
 function protected_email_preprocess_captcha(&$variables) {
   $variables['element']['captcha_widgets']['captcha_response']['#size'] = 16;
-  $variables['element']['captcha_widgets']['captcha_response']['#placeholder'] = t('Type code to view...');
+  $variables['element']['captcha_widgets']['captcha_response']['#placeholder'] = t('Type the answer...');
   unset($variables['element']['captcha_widgets']['captcha_response']['#title']);
 }
 
