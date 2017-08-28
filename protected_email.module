@@ -72,7 +72,7 @@ function protected_email_form_alter(array &$form, FormStateInterface $form_state
       // Enable image captcha on form.
       $captcha_element = [
         '#type' => 'captcha',
-        '#captcha_type' => 'image_captcha/Image',
+        // '#captcha_type' => 'image_captcha/Image', // Use default captchas for now.
       ];
       // Get placement and insert.
       \Drupal::moduleHandler()->loadInclude('captcha', 'inc');
