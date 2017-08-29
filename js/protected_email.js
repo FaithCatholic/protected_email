@@ -56,9 +56,11 @@
                 // If there is a new form set an error and swap the image src to the old form.
                 error = true;
                 // Copy the new image src.
-                var newImgSrc = newForm.find('img').attr('src');
+                // var newImgSrc = newForm.find('img').attr('src');
+                var newMathProb = newForm.find('.form-item-captcha-response .field-prefix').text();
                 // Swap the old form image src with response new image src.
-                form.find('img').attr('src', newImgSrc);
+                // form.find('img').attr('src', newImgSrc);
+                form.find('.form-item-captcha-response .field-prefix').text(newMathProb);
                 // Add error classes.
                 form.find('.form-text, img').addClass('error');
                 // Reset text box data.
