@@ -16,15 +16,6 @@ function protected_email_theme() {
 }
 
 /**
- * Implements hook_preprocess_page()
- */
-function protected_email_preprocess_page(&$vars) {
-  $vars['get']['protected_email_id'] = @XSS::filter($_GET['protected_email_id']);
-  $vars['get']['protected_email_type'] = @XSS::filter($_GET['protected_email_type']);
-  $vars['get']['protected_email_value'] = @XSS::filter($_GET['protected_email_value']);
-}
-
-/**
  * Preprocess protected email field output.
  */
 function template_preprocess_protected_email(&$variables) {
