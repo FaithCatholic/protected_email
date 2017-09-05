@@ -1,8 +1,9 @@
 <?php
 
-use Drupal\Component\Utility\XSS;
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\protected_email\Form\ProtectedEmailCaptcha;
+use Drupal\user\Entity\User;
 
 /**
  * Implements hook_theme().
@@ -16,6 +17,15 @@ function protected_email_theme() {
 }
 
 /**
+ * Implements hook_preprocess_page()
+ */
+function protected_email_preprocess_page(&$vars) {
+  $vars['get']['protected_email_id'] = @Xss::filter($_GET['protected_email_id']);
+  $vars['get']['protected_email_type'] = @Xss::filter($_GET['protected_email_type']);
+  $vars['get']['protected_email_value'] = @Xss::filter($_GET['protected_email_value']);
+}
+
+/**
  * Preprocess protected email field output.
  */
 function template_preprocess_protected_email(&$variables) {
@@ -23,19 +33,31 @@ function template_preprocess_protected_email(&$variables) {
   $type = $variables['data']['type'];
   $field = $variables['data']['field'];
 
-  // We need to generate unique form ids so that submit buttons
-  // submit the right form, not only the FIRST form!
-  static $form_count = 0;
-  $form_count++;
-
-  $form = new ProtectedEmailCaptcha($form_count);
-  $form = \Drupal::formBuilder()->getForm($form, $id, $type, $field);
+  $user = User::load($id);
+  $current_user = User::load(\Drupal::currentUser()->id());
 
   $output  = '';
-  $output .= '<span data-entity-id="' . $id . '" data-entity-type="' . $type . '" data-entity-field="' . $field . '" class="protected-email-captcha-value"></span>';
-  $output .= '<span class="protected-email-captcha-label">' . t('View email address') . ' »</span>';
-  $output .= \Drupal::service('renderer')->render($form);
-  $output .= '<span class="protected-email-captcha-cancel hide">' . t('Cancel') . '</span>';
+
+  if ($current_user->hasPermission('skip protected email captcha')) {
+    // Privileged users should see an email without a captcha challenge.
+    $output .= '<span data-entity-id="' . $id . '" data-entity-type="' . $type . '" data-entity-field="' . $field . '" class="protected-email-captcha-value">';
+    $output .= '<a href="mailto:' . $user->field_public_email->value .'">';
+    $output .= $user->field_public_email->value;
+    $output .= '</a></span>';
+  } else {
+    // We need to generate unique form ids so that submit buttons
+    // submit the right form, not only the FIRST form!
+    static $form_count = 0;
+    $form_count++;
+
+    $form = new ProtectedEmailCaptcha($form_count);
+    $form = \Drupal::formBuilder()->getForm($form, $id, $type, $field);
+
+    $output .= '<span data-entity-id="' . $id . '" data-entity-type="' . $type . '" data-entity-field="' . $field . '" class="protected-email-captcha-value"></span>';
+    $output .= '<span class="protected-email-captcha-label">' . t('View email address') . ' »</span>';
+    $output .= \Drupal::service('renderer')->render($form);
+    $output .= '<span class="protected-email-captcha-cancel hide">' . t('Cancel') . '</span>';
+  }
 
   $variables['captcha'] = $output;
 }
@@ -45,7 +67,7 @@ function template_preprocess_protected_email(&$variables) {
  */
 function protected_email_preprocess_captcha(&$variables) {
   $variables['element']['captcha_widgets']['captcha_response']['#size'] = 16;
-  $variables['element']['captcha_widgets']['captcha_response']['#placeholder'] = t('Answer to view...');
+  $variables['element']['captcha_widgets']['captcha_response']['#placeholder'] = t('Type the answer...');
   unset($variables['element']['captcha_widgets']['captcha_response']['#title']);
 }
 
@@ -63,7 +85,7 @@ function protected_email_form_alter(array &$form, FormStateInterface $form_state
       // Enable image captcha on form.
       $captcha_element = [
         '#type' => 'captcha',
-        // '#captcha_type' => 'image_captcha/Image',
+        // '#captcha_type' => 'image_captcha/Image', // Use default captchas for now.
       ];
       // Get placement and insert.
       \Drupal::moduleHandler()->loadInclude('captcha', 'inc');

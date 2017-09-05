@@ -1,0 +1,3 @@
+skip protected email captcha:
+  title: 'Skip protected email captcha'
+  description: 'May view all protected emails without completing an enabled captcha challenge.'

@@ -4,6 +4,6 @@ description: Field formatter that requires users to fill a recaptcha form to vie
 core: 8.x
 package: Custom
 dependencies:
-  - image_captcha
+  - captcha
   - honeypot
   - rest
