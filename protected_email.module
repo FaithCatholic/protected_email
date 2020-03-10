@@ -87,10 +87,12 @@ function protected_email_form_alter(array &$form, FormStateInterface $form_state
         '#type' => 'captcha',
         // '#captcha_type' => 'image_captcha/Image', // Use default captchas for now.
       ];
-      // Get placement and insert.
+      // Get placement.
       \Drupal::moduleHandler()->loadInclude('captcha', 'inc');
       $captcha_placement = _captcha_get_captcha_placement($form_id, $form);
-      _captcha_insert_captcha_element($form, $captcha_placement, $captcha_element);
+      // Insert the captcha.
+      $captchaService = \Drupal::service('captcha.helper');
+      $captchaService->insertCaptchaElement($form, $captcha_placement, $captcha_element);
     }
 
     // Add honeypot protection.
