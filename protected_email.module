@@ -96,7 +96,7 @@ function protected_email_form_alter(array &$form, FormStateInterface $form_state
     }
 
     // Add honeypot protection.
-    \Drupal::moduleHandler()->loadInclude('honeypot', 'module');
-    honeypot_add_form_protection($form, $form_state, ['honeypot']);
+    $honeypotService = \Drupal::service('honeypot');
+    $honeypotService->addFormProtection($form, $form_state, ['honeypot']);
   }
 }

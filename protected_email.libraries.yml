@@ -6,4 +6,3 @@ protected_email:
     js/protected_email.js: {}
   dependencies:
     - core/jquery
-    - core/jquery.once
